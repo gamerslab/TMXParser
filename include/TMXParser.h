@@ -15,87 +15,83 @@
 namespace TMX
 {
 
-  class Parser
-  {
+    class Parser
+    {
     public:
-      Parser( const char* filename );
-      Parser();
-      virtual ~Parser();
+        Parser( const char* filename );
+        Parser();
+        virtual ~Parser();
 
-      bool load( const char* filename );
+        bool load( const char* filename );
 
-      struct Map {
-        std::string version;
-        std::string orientation;
-        unsigned int width;
-        unsigned int height;
-        unsigned int tileWidth;
-        unsigned int tileHeight;
-        std::string backgroundColor;
-        std::map<std::string, std::string> property;
-      };
+        struct Map {
+            std::string version;
+            std::string orientation;
+            unsigned int width;
+            unsigned int height;
+            unsigned int tileWidth;
+            unsigned int tileHeight;
+            std::string backgroundColor;
+            std::map<std::string, std::string> property;
+        };
 
-      struct Tileset {
-        unsigned int firstGID;
-        std::string source;
-      };
+        struct Tileset {
+            unsigned int firstGID;
+            std::string source;
+        };
 
-      struct Data {
-        std::string encoding;
-        std::string compression;
-        std::string contents;
-      };
+        struct TileLayer {
+            std::string name;
+            unsigned int width;
+            unsigned int height;
+            bool visible;
+            float opacity;
+            std::vector<std::vector<int> > tiles;
+            std::map<std::string, std::string> property;
+        };
 
-      struct TileLayer {
-        std::string name;
-        bool visible;
-        float opacity;
-        Data data;
-        std::map<std::string, std::string> property;
-      };
+        struct Object {
+            std::string name;
+            std::string type;
+            int x;
+            int y;
+            unsigned int width;
+            unsigned int height;
+            unsigned int gid;
+            bool visible;
+            std::map<std::string, std::string> property;
+        };
 
-      struct Object {
-        std::string name;
-        std::string type;
-        int x;
-        int y;
-        unsigned int width;
-        unsigned int height;
-        unsigned int gid;
-        bool visible;
-        std::map<std::string, std::string> property;
-      };
+        struct ObjectGroup {
+            std::string color;
+            std::string name;
+            float opacity;
+            bool visible;
+            std::map<std::string, Object> object;
+            std::map<std::string, std::string> property;
+        };
 
-      struct ObjectGroup {
-        std::string color;
-        std::string name;
-        float opacity;
-        bool visible;
-        std::map<std::string, Object> object;
-        std::map<std::string, std::string> property;
-      };
+        struct Image {
+            std::string source;
+            std::string transparencyColor;
+        };
 
-      struct Image {
-        std::string source;
-        std::string transparencyColor;
-      };
+        struct ImageLayer {
+            std::string name;
+            float opacity;
+            bool visible;
+            std::map<std::string, std::string> property;
+            Image image;
+        };
 
-      struct ImageLayer {
-        std::string name;
-        float opacity;
-        bool visible;
-        std::map<std::string, std::string> property;
-        Image image;
-      };
-
-      Map mapInfo;
-      std::vector<Tileset> tilesetList;
-      std::map<std::string, TileLayer> tileLayer;
-      std::map<std::string, ObjectGroup> objectGroup;
-      std::map<std::string, ImageLayer> imageLayer;
+        Map mapInfo;
+        std::vector<Tileset> tilesetList;
+        std::map<std::string, TileLayer> tileLayer;
+        std::map<std::string, ObjectGroup> objectGroup;
+        std::map<std::string, ImageLayer> imageLayer;
     protected:
     private:
-  };
+    };
 
 }
 #endif // TMXPARSER_H
