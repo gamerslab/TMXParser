@@ -2,17 +2,17 @@
 
 #include <iostream>
 #include <sstream>
+#include "xml_utils.hpp"
 
 namespace TSX {
-    Tileset* parse(const char* dirname, const char* filename) {
+    Tileset* parse(const char* filename) {
         // TODO: Clean this function
+        const char* dirname = TMXUtils::dirname(filename);
         Tileset* tileset = new Tileset();
-        std::stringstream path;
-        path << dirname << filename;
 
         rapidxml::xml_node<> *root_node;
         rapidxml::xml_document<> doc;
-        rapidxml::file<> file(path.str().c_str());
+        rapidxml::file<> file(filename);
         doc.parse<0>(file.data());
 
         // Get root node
@@ -41,7 +41,9 @@ namespace TSX {
         }
 
         //parse tileset image
-        tileset->image.source = root_node->first_node("image")->first_attribute("source")->value();
+        std::stringstream source;
+        source << dirname << root_node->first_node("image")->first_attribute("source")->value();
+        tileset->image.source = source.str();
         tileset->image.width = (unsigned int) std::atoi(root_node->first_node("image")->first_attribute("width")->value());
         tileset->image.height = (unsigned int) std::atoi(root_node->first_node("image")->first_attribute("height")->value());
 
@@ -99,6 +101,6 @@ namespace TSX {
     }
 
     void Tileset::Print() const {
-        std::cout << "Tileset Name: " << name << std::endl;
+        std::cout << "Tileset[" << name << '@' << image.source << ']' << std::endl;
     }
 }

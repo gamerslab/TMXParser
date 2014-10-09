@@ -68,13 +68,13 @@ namespace TMX
         std::string background_color;
         std::map<std::string, std::string> property;
         std::vector<TSX::Tileset*> tilesets;
-        std::map<std::string, TileLayer> tile_layers;
+        std::vector<TileLayer*> tile_layers;
         std::map<std::string, ObjectGroup> object_groups;
         std::map<std::string, ImageLayer> image_layers;
 
         void Print();
     };
 
-    Map* parse(const char* dirname, const char* file);
+    Map *parse(const char *filename);
 }
 #endif // TMXPARSER_H

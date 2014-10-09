@@ -47,6 +47,6 @@ namespace TSX {
         void Print() const;
     };
 
-    Tileset* parse(const char* dirname, const char* filename);
+    Tileset* parse(const char* filename);
 }
 #endif // TSXPARSER_H
