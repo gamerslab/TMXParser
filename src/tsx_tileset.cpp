@@ -7,7 +7,7 @@
 namespace TSX {
     Tileset* parse(const char* filename) {
         // TODO: Clean this function
-        const char* dirname = TMXUtils::dirname(filename);
+        std::string dirname = TMXUtils::dirname(filename);
         Tileset* tileset = new Tileset();
 
         rapidxml::xml_node<> *root_node;

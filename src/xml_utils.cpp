@@ -1,5 +1,4 @@
 #include "xml_utils.hpp"
-#include <iostream>
 
 namespace TMXUtils
 {
@@ -12,13 +11,13 @@ namespace TMXUtils
         return default_value;
     }
 
-    const char* dirname(const char* filename) {
+    std::string dirname(const char* filename) {
         std::string fs = filename;
-        std::string dirname = fs.substr(0, fs.find_last_of("/"));
+        std::string dir = fs.substr(0, fs.find_last_of("/"));
 
-        if(not dirname.empty())
-            dirname = dirname.append("/");
+        if(not dir.empty())
+            dir.append("/");
 
-        return dirname.c_str();
+        return dir;
     }
 }

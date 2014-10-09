@@ -6,8 +6,8 @@
 
 namespace TMX {
     Map *parse(const char *filename) {
-        const char* dirname = TMXUtils::dirname(filename);
         Map* map = new Map();
+        std::string dirname = TMXUtils::dirname(filename);
 
         rapidxml::file<> file(filename);
         rapidxml::xml_node<> *root_node;
