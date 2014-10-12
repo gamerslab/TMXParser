@@ -53,6 +53,11 @@ namespace TSX {
             tileset->image.transparentColor = "ffffff";
         }
 
+        tileset->width = tileset->image.width / tileset->tile_width;
+        tileset->height = tileset->image.height / tileset->tile_height;
+        tileset->horizontal_ratio = 1.0f / tileset->width;
+        tileset->vertical_ratio = 1.0f / tileset->height;
+
         //parse tileset terrains
         if(root_node->first_node("terraintypes") != 0) {
             for(rapidxml::xml_node<> *terrain_node = root_node->first_node("terraintypes")->first_node("terrain"); terrain_node; terrain_node = terrain_node->next_sibling()) {

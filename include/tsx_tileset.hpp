@@ -33,6 +33,10 @@ namespace TSX {
         std::string name;
         unsigned int tile_width;
         unsigned int tile_height;
+        unsigned int width;
+        unsigned int height;
+        float horizontal_ratio;
+        float vertical_ratio;
         unsigned int spacing;
         unsigned int margin;
         int offsetX;
