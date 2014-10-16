@@ -72,7 +72,7 @@ namespace TSX {
                     }
                 }
 
-                tileset->terrainList.push_back(terrain);
+                tileset->terrains.push_back(terrain);
             }
         }
 
@@ -90,7 +90,7 @@ namespace TSX {
                     }
                 }
 
-                tileset->tileList.push_back(tile);
+                tileset->tiles[tile.id] = tile;
             }
         }
 

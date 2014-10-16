@@ -45,8 +45,8 @@ namespace TSX {
 
         TilesetImage image;
         std::map<std::string, std::string> property;
-        std::vector<Terrain> terrainList;
-        std::vector<Tile> tileList;
+        std::vector<Terrain> terrains;
+        std::map<int, Tile> tiles;
 
         void Print() const;
     };

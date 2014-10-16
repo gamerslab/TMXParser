@@ -61,11 +61,13 @@ namespace TMX
     struct Map {
         std::string version;
         std::string orientation;
+        std::string background_color;
         unsigned int width;
         unsigned int height;
         unsigned int tile_width;
         unsigned int tile_height;
-        std::string background_color;
+        unsigned int width_pixels;
+        unsigned int height_pixels;
         std::map<std::string, std::string> property;
         std::vector<TSX::Tileset*> tilesets;
         std::vector<TileLayer*> tile_layers;

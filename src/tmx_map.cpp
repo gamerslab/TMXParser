@@ -28,11 +28,13 @@ namespace TMX {
 
         map->version = root_node->first_attribute("version")->value();
         map->orientation = root_node->first_attribute("orientation")->value();
+        map->background_color = TMXUtils::get_attribute(root_node, "backgroundcolor", "000000");
         map->width = (unsigned int) std::atoi(root_node->first_attribute("width")->value());
         map->height = (unsigned int) std::atoi(root_node->first_attribute("height")->value());
         map->tile_width = (unsigned int) std::atoi(root_node->first_attribute("tilewidth")->value());
         map->tile_height = (unsigned int) std::atoi(root_node->first_attribute("tileheight")->value());
-        map->background_color = TMXUtils::get_attribute(root_node, "backgroundcolor", "000000");
+        map->width_pixels = map->width * map->tile_width;
+        map->height_pixels = map->height * map->tile_height;
 
         if(root_node->first_node("properties") != 0) {
             for(rapidxml::xml_node<> *properties_node = root_node->first_node("properties")->first_node("property");
