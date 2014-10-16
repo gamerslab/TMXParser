@@ -83,14 +83,6 @@ namespace TSX {
 
                 tile.id = (unsigned int) std::atoi(tile_node->first_attribute("id")->value());
 
-                std::string tmp = tile_node->first_attribute("terrain")->value();
-                std::stringstream ss(tmp);
-                std::string tmpValue;
-
-                while(std::getline(ss, tmpValue, ',')) {
-                    tile.terrain.push_back((unsigned int) std::atoi(tmpValue.c_str()));
-                }
-
                 //parse tile properties
                 if(tile_node->first_node("properties") != 0) {
                     for(rapidxml::xml_node<> *properties_node = tile_node->first_node("properties")->first_node("property"); properties_node; properties_node = properties_node->next_sibling()) {
