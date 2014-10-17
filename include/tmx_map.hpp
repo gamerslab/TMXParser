@@ -18,10 +18,9 @@ namespace TMX
         std::string name;
         unsigned int width;
         unsigned int height;
-        bool visible;
-        double opacity;
         std::vector<std::vector<int> > tiles;
-        std::map<std::string, std::string> property;
+
+        void Print() const;
     };
 
     struct Object {
@@ -70,11 +69,13 @@ namespace TMX
         unsigned int height_pixels;
         std::map<std::string, std::string> property;
         std::vector<TSX::Tileset*> tilesets;
-        std::vector<TileLayer*> tile_layers;
+        std::vector<TileLayer*> tile_layers_below;
+        std::vector<TileLayer*> tile_layers_above;
         std::map<std::string, ObjectGroup> object_groups;
         std::map<std::string, ImageLayer> image_layers;
 
-        void Print();
+        void Print() const;
+        void AddAboveLayer();
     };
 
     Map *parse(const char *filename);

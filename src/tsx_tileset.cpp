@@ -58,7 +58,7 @@ namespace TSX {
         tileset->horizontal_ratio = 1.0f / tileset->width;
         tileset->vertical_ratio = 1.0f / tileset->height;
 
-        //parse tileset terrains
+        /*//parse tileset terrains
         if(root_node->first_node("terraintypes") != 0) {
             for(rapidxml::xml_node<> *terrain_node = root_node->first_node("terraintypes")->first_node("terrain"); terrain_node; terrain_node = terrain_node->next_sibling()) {
                 Terrain terrain;
@@ -74,19 +74,21 @@ namespace TSX {
 
                 tileset->terrains.push_back(terrain);
             }
-        }
+        }*/
 
         // Parse tiles
         if(root_node->first_node("tile") != 0) {
             for(rapidxml::xml_node<> *tile_node = root_node->first_node("tile"); tile_node; tile_node = tile_node->next_sibling()) {
-                Tile tile;
 
-                tile.id = (unsigned int) std::atoi(tile_node->first_attribute("id")->value());
+                unsigned int tile_id = (unsigned int) std::atoi(tile_node->first_attribute("id")->value());
+
+                Tile& tile = tileset->tiles[tile_id];
+                tile.id = tile_id;
 
                 //parse tile properties
                 if(tile_node->first_node("properties") != 0) {
                     for(rapidxml::xml_node<> *properties_node = tile_node->first_node("properties")->first_node("property"); properties_node; properties_node = properties_node->next_sibling()) {
-                        tile.property[properties_node->first_attribute("name")->value()] = properties_node->first_attribute("value")->value();
+                        tile.properties[properties_node->first_attribute("name")->value()] = properties_node->first_attribute("value")->value();
                     }
                 }
 
@@ -99,5 +101,13 @@ namespace TSX {
 
     void Tileset::Print() const {
         std::cout << "Tileset[" << name << '@' << image.source << ']' << std::endl;
+    }
+
+    std::string Tile::Property(const std::string& name) const {
+        std::map<std::string, std::string>::const_iterator it = properties.find(name);
+        if(it == properties.end())
+            return "N/A";
+
+        return it->second;
     }
 }

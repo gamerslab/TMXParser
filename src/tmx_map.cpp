@@ -54,6 +54,9 @@ namespace TMX {
             map->tilesets.push_back(tileset);
         }
 
+        // Create an above TileLayer to render some tiles after entities
+        map->AddAboveLayer();
+
         for(rapidxml::xml_node<> *layer_node = root_node->first_node("layer"); layer_node;
             layer_node = layer_node->next_sibling("layer"))
         {
@@ -62,22 +65,17 @@ namespace TMX {
             layer->width = (unsigned int) atoi(layer_node->first_attribute("width")->value());
             layer->height = (unsigned int) atoi(layer_node->first_attribute("height")->value());
 
-            if(layer_node->first_node("properties") != 0) {
-                for(rapidxml::xml_node<> *properties_node =
-                        layer_node->first_node("properties")->first_node("property"); properties_node;
-                    properties_node = properties_node->next_sibling()) {
-                    layer->property[properties_node->first_attribute("name")->value()] =
-                            properties_node->first_attribute("value")->value();
-                }
-            }
-
             // CSV only
             rapidxml::xml_node<> *data_node = layer_node->first_node("data");
 
             if(data_node->first_attribute("encoding")->value() != std::string("csv"))
-                throw "Only CSV endoding supported en TMX maps.";
+                throw "Only CSV encoding supported en TMX maps.";
 
             layer->tiles = std::vector<std::vector<int>>(layer->height, std::vector<int>(layer->width, 0));
+
+            // We only support one tileset per map
+            TSX::Tileset* tileset = map->tilesets[0];
+
             std::stringstream data(data_node->value());
             int tile_id;
             char comma;
@@ -88,11 +86,25 @@ namespace TMX {
                         data >> comma;
 
                     data >> tile_id;
-                    layer->tiles[i][j] = tile_id;
+
+                    if(tileset->tiles[tile_id-1].Property("above") == "true") {
+                        int layer_index = 0;
+
+                        while(layer_index < map->tile_layers_above.size() and
+                                map->tile_layers_above[layer_index]->tiles[i][j] != 0)
+                            layer_index++;
+
+                        if(layer_index == map->tile_layers_above.size())
+                            map->AddAboveLayer();
+
+                        map->tile_layers_above[layer_index]->tiles[i][j] = tile_id;
+                    } else {
+                        layer->tiles[i][j] = tile_id;
+                    }
                 }
             }
 
-            map->tile_layers.push_back(layer);
+            map->tile_layers_below.push_back(layer);
         }
 
         for(rapidxml::xml_node<> *oGroup_node = root_node->first_node("objectgroup"); oGroup_node;
@@ -153,7 +165,17 @@ namespace TMX {
         return map;
     }
 
-    void Map::Print() {
+    void Map::AddAboveLayer() {
+        TileLayer* layer_above = new TileLayer();
+        layer_above->name = "Above Layer";
+        layer_above->width = width;
+        layer_above->height = height;
+        layer_above->tiles = std::vector<std::vector<int>>(height, std::vector<int>(width, 0));
+
+        tile_layers_above.push_back(layer_above);
+    }
+
+    void Map::Print() const {
         std::cout << "Version: " << version << std::endl;
         std::cout << "Orientation: " << orientation << std::endl;
         std::cout << "Width: " << width << std::endl;
@@ -163,7 +185,7 @@ namespace TMX {
         std::cout << "Background Color: " << background_color << std::endl;
 
         std::cout << "Properties: " << std::endl;
-        for(std::map<std::string, std::string>::iterator it = property.begin(); it != property.end(); ++it) {
+        for(std::map<std::string, std::string>::const_iterator it = property.begin(); it != property.end(); ++it) {
             std::cout << "-> " << it->first << " : " << it->second << std::endl;
         }
 
@@ -173,27 +195,12 @@ namespace TMX {
             tileset->Print();
         }
 
-        for(const TileLayer* layer : tile_layers) {
-            std::cout << std::endl << "Layer Name: " << layer->name << std::endl;
-            std::cout << "Properties: " << std::endl;
+        for(const TileLayer* layer : tile_layers_below) {
+            layer->Print();
+        }
 
-            for(const auto &property : layer->property) {
-                std::cout << "-> " << property.first << " : " << property.second << std::endl;
-            }
-
-            std::cout << "Layer Data: " << std::endl;
-            for(int i = 0; i < layer->height; i++) {
-                for(int j = 0; j < layer->width; j++) {
-                    if(j != 0)
-                        std::cout << ' ';
-
-                    std::cout << layer->tiles[i][j];
-                }
-
-                std::cout << std::endl;
-            }
-
-            std::cout << std::endl;
+        for(const TileLayer* layer : tile_layers_above) {
+            layer->Print();
         }
 
         for(const auto &name_ogroup : object_groups) {
@@ -231,5 +238,23 @@ namespace TMX {
                 std::cout << "-> " << property.first << " : " << property.second << std::endl;
             }
         }
+    }
+
+    void TileLayer::Print() const {
+        std::cout << std::endl << "Layer Name: " << name << std::endl;
+
+        std::cout << "Layer Data Below: " << std::endl;
+        for(int i = 0; i < height; i++) {
+            for(int j = 0; j < width; j++) {
+                if(j != 0)
+                    std::cout << ' ';
+
+                std::cout << tiles[i][j];
+            }
+
+            std::cout << std::endl;
+        }
+
+        std::cout << std::endl;
     }
 }

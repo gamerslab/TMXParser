@@ -25,8 +25,10 @@ namespace TSX {
 
     struct Tile {
         unsigned int id;
-        std::vector<unsigned int> terrain;
-        std::map<std::string, std::string> property;
+        //std::vector<unsigned int> terrain;
+        std::map<std::string, std::string> properties;
+
+        std::string Property(const std::string& name) const;
     };
 
     struct Tileset {
@@ -37,15 +39,15 @@ namespace TSX {
         unsigned int height;
         float horizontal_ratio;
         float vertical_ratio;
-        unsigned int spacing;
-        unsigned int margin;
+        /*unsigned int spacing;
+        unsigned int margin;*/
         int offsetX;
         int offsetY;
 
 
         TilesetImage image;
         std::map<std::string, std::string> property;
-        std::vector<Terrain> terrains;
+        //std::vector<Terrain> terrains;
         std::map<int, Tile> tiles;
 
         void Print() const;
