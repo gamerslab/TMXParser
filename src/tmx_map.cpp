@@ -126,11 +126,11 @@ namespace TMX {
             for(rapidxml::xml_node<> *object_node = oGroup_node->first_node("object"); object_node;
                 object_node = object_node->next_sibling()) {
                 Object object;
-                object.name = object_node->first_attribute("name")->value();
+                object.name = TMXUtils::get_attribute(object_node, "name", "");
                 object.type = object_node->first_attribute("type")->value();
                 object.gid = (unsigned int) atoi(TMXUtils::get_attribute(object_node, "gid", "0"));
-                object.width = (unsigned int) atoi(object_node->first_attribute("width")->value());
-                object.height = (unsigned int) atoi(object_node->first_attribute("height")->value());
+                object.width = (unsigned int) atoi(TMXUtils::get_attribute(object_node, "width", "0"));
+                object.height = (unsigned int) atoi(TMXUtils::get_attribute(object_node, "height", "0"));
                 object.x = atoi(object_node->first_attribute("x")->value());
                 object.y = atoi(object_node->first_attribute("y")->value());
 
