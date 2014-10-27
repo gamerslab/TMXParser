@@ -123,6 +123,7 @@ namespace TMX {
                 }
             }
 
+            int unknown_count = 1;
             for(rapidxml::xml_node<> *object_node = oGroup_node->first_node("object"); object_node;
                 object_node = object_node->next_sibling()) {
                 Object object;
@@ -134,7 +135,20 @@ namespace TMX {
                 object.x = atoi(object_node->first_attribute("x")->value());
                 object.y = atoi(object_node->first_attribute("y")->value());
 
-                oGroup.object.push_back(object);
+                if(object.name.empty()) {
+                    std::stringstream name;
+                    name << "unknown_" << unknown_count;
+                    unknown_count++;
+                    object.name = name.str();
+                }
+
+                if(object_node->first_node("properties") != 0) {
+                    for(rapidxml::xml_node<> *properties_node = object_node->first_node("properties")->first_node("property"); properties_node; properties_node = properties_node->next_sibling()) {
+                        object.property[properties_node->first_attribute("name")->value()] = properties_node->first_attribute("value")->value();
+                    }
+                }
+
+                oGroup.objects[object.name] = object;
             }
 
             map->object_groups[oGroup.name] = oGroup;
@@ -217,8 +231,8 @@ namespace TMX {
             }
 
             std::cout << "Objects:" << std::endl;
-            for(const Object& object : oGroup.object) {
-                std::cout << object.name << " (" << object.type << ")" << std::endl;
+            for(const auto& object : oGroup.objects) {
+                std::cout << object.second.name << " (" << object.second.type << ")" << std::endl;
             }
 
             std::cout << std::endl;

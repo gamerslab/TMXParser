@@ -40,7 +40,7 @@ namespace TMX
         std::string name;
         double opacity;
         bool visible;
-        std::vector<Object> object;
+        std::map<std::string, Object> objects;
         std::map<std::string, std::string> property;
     };
 
