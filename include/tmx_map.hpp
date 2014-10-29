@@ -74,6 +74,8 @@ namespace TMX
         std::map<std::string, ObjectGroup> object_groups;
         std::map<std::string, ImageLayer> image_layers;
 
+        ~Map();
+
         void Print() const;
         void AddAboveLayer();
     };

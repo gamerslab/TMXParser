@@ -271,4 +271,15 @@ namespace TMX {
 
         std::cout << std::endl;
     }
+
+    Map::~Map() {
+        for(TSX::Tileset* tileset : tilesets)
+            delete tileset;
+
+        for(TileLayer* layer : tile_layers_below)
+            delete layer;
+
+        for(TileLayer* layer : tile_layers_above)
+            delete layer;
+    }
 }
