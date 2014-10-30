@@ -12,21 +12,15 @@
 namespace TSX {
     struct TilesetImage {
         std::string source;
-        std::string transparentColor;
         unsigned int width;
         unsigned int height;
     };
 
-    struct Terrain {
-        std::string name;
-        unsigned int tile;
-        std::map<std::string, std::string> property;
-    };
-
     struct Tile {
         unsigned int id;
-        //std::vector<unsigned int> terrain;
         std::map<std::string, std::string> properties;
+        bool animated;
+        unsigned int first_frame;
 
         std::string Property(const std::string& name) const;
     };
@@ -37,17 +31,15 @@ namespace TSX {
         unsigned int tile_height;
         unsigned int width;
         unsigned int height;
+        unsigned int frames;
+        float interval;
+        bool random;
         float horizontal_ratio;
         float vertical_ratio;
-        /*unsigned int spacing;
-        unsigned int margin;*/
-        int offsetX;
-        int offsetY;
 
 
         TilesetImage image;
         std::map<std::string, std::string> property;
-        //std::vector<Terrain> terrains;
         std::map<int, Tile> tiles;
 
         void Print() const;

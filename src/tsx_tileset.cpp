@@ -15,66 +15,37 @@ namespace TSX {
         rapidxml::file<> file(filename);
         doc.parse<0>(file.data());
 
-        // Get root node
         root_node = doc.first_node("tileset");
 
-        // Parse tileset element
         tileset->name = root_node->first_attribute("name")->value();
         tileset->tile_width = (unsigned int) std::atoi(root_node->first_attribute("tilewidth")->value());
         tileset->tile_height = (unsigned int) std::atoi(root_node->first_attribute("tileheight")->value());
-        //tileset->spacing = (unsigned int) std::atoi(root_node->first_attribute("spacing")->value());
-        //tileset->margin = (unsigned int) std::atoi(root_node->first_attribute("margin")->value());
 
-        if(root_node->first_node("tileoffset") != 0) {
-            tileset->offsetX = std::atoi(root_node->first_node("tileoffset")->first_attribute("x")->value());
-            tileset->offsetY = std::atoi(root_node->first_node("tileoffset")->first_attribute("y")->value());
-        } else {
-            tileset->offsetX = 0;
-            tileset->offsetY = 0;
-        }
-
-        // Parse tileset properties
         if(root_node->first_node("properties") != 0) {
             for(rapidxml::xml_node<> *properties_node = root_node->first_node("properties")->first_node("property"); properties_node; properties_node = properties_node->next_sibling()) {
                 tileset->property[properties_node->first_attribute("name")->value()] = properties_node->first_attribute("value")->value();
             }
         }
 
-        //parse tileset image
+        auto it = tileset->property.find("frames");
+        tileset->frames = it == tileset->property.end() ? 1 : (unsigned int) std::atoi(it->second.c_str());
+
+        it = tileset->property.find("interval");
+        tileset->interval = it == tileset->property.end() ? 0 : (float) std::atof(it->second.c_str());
+
+        tileset->random = tileset->property.find("random") != tileset->property.end();
+
+        // Tileset image
         std::stringstream source;
         source << dirname << root_node->first_node("image")->first_attribute("source")->value();
         tileset->image.source = source.str();
         tileset->image.width = (unsigned int) std::atoi(root_node->first_node("image")->first_attribute("width")->value());
         tileset->image.height = (unsigned int) std::atoi(root_node->first_node("image")->first_attribute("height")->value());
 
-        if(root_node->first_node("image")->first_attribute("trans") != 0) {
-            tileset->image.transparentColor = std::atoi(root_node->first_node("image")->first_attribute("trans")->value());
-        } else {
-            tileset->image.transparentColor = "ffffff";
-        }
-
         tileset->width = tileset->image.width / tileset->tile_width;
         tileset->height = tileset->image.height / tileset->tile_height;
         tileset->horizontal_ratio = 1.0f / tileset->width;
         tileset->vertical_ratio = 1.0f / tileset->height;
-
-        /*//parse tileset terrains
-        if(root_node->first_node("terraintypes") != 0) {
-            for(rapidxml::xml_node<> *terrain_node = root_node->first_node("terraintypes")->first_node("terrain"); terrain_node; terrain_node = terrain_node->next_sibling()) {
-                Terrain terrain;
-                terrain.name = terrain_node->first_attribute("name")->value();
-                terrain.tile = std::atoi(terrain_node->first_attribute("tile")->value());
-
-                //parse tileset terrain properties
-                if(terrain_node->first_node("properties") != 0) {
-                    for(rapidxml::xml_node<> *properties_node = terrain_node->first_node("properties")->first_node("property"); properties_node; properties_node = properties_node->next_sibling()) {
-                        terrain.property[properties_node->first_attribute("name")->value()] = properties_node->first_attribute("value")->value();
-                    }
-                }
-
-                tileset->terrains.push_back(terrain);
-            }
-        }*/
 
         // Parse tiles
         if(root_node->first_node("tile") != 0) {
@@ -92,6 +63,8 @@ namespace TSX {
                     }
                 }
 
+                tile.animated = tile.properties.find("animated") != tile.properties.end();
+                tile.first_frame = tile.animated && tileset->random ? rand() % tileset->frames : 0;
                 tileset->tiles[tile.id] = tile;
             }
         }
