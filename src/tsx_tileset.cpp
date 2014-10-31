@@ -29,11 +29,12 @@ namespace TSX {
 
         auto it = tileset->property.find("frames");
         tileset->frames = it == tileset->property.end() ? 1 : (unsigned int) std::atoi(it->second.c_str());
-
         it = tileset->property.find("interval");
         tileset->interval = it == tileset->property.end() ? 0 : (float) std::atof(it->second.c_str());
-
         tileset->random = tileset->property.find("random") != tileset->property.end();
+
+        tileset->music = tileset->property["music"];
+        tileset->intro = tileset->property["intro"];
 
         // Tileset image
         std::stringstream source;

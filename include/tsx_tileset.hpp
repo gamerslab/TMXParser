@@ -36,6 +36,8 @@ namespace TSX {
         bool random;
         float horizontal_ratio;
         float vertical_ratio;
+        std::string music;
+        std::string intro;
 
 
         TilesetImage image;
