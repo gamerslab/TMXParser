@@ -32,6 +32,7 @@ namespace TSX {
         it = tileset->property.find("interval");
         tileset->interval = it == tileset->property.end() ? 0 : (float) std::atof(it->second.c_str());
         tileset->random = tileset->property.find("random") != tileset->property.end();
+        tileset->show_hud = tileset->property.find("hide_hud") == tileset->property.end();
 
         tileset->music = tileset->property["music"];
         tileset->intro = tileset->property["intro"];

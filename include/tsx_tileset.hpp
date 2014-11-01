@@ -34,6 +34,7 @@ namespace TSX {
         unsigned int frames;
         float interval;
         bool random;
+        bool show_hud;
         float horizontal_ratio;
         float vertical_ratio;
         std::string music;
