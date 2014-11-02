@@ -128,7 +128,7 @@ namespace TMX {
                 object_node = object_node->next_sibling()) {
                 Object object;
                 object.name = TMXUtils::get_attribute(object_node, "name", "");
-                object.type = object_node->first_attribute("type")->value();
+                object.type = TMXUtils::get_attribute(object_node, "type", "");
                 object.gid = (unsigned int) atoi(TMXUtils::get_attribute(object_node, "gid", "0"));
                 object.width = (unsigned int) atoi(TMXUtils::get_attribute(object_node, "width", "0"));
                 object.height = (unsigned int) atoi(TMXUtils::get_attribute(object_node, "height", "0"));
