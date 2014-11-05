@@ -87,7 +87,10 @@ namespace TMX {
 
                     data >> tile_id;
 
-                    if(tileset->tiles[tile_id-1].Property("above") == "true") {
+					if (tile_id <= 0)
+						continue;
+
+					if (tileset->tiles.find(tile_id - 1) != tileset->tiles.end() && tileset->tiles[tile_id - 1].Property("above") == "true") {
                         int layer_index = 0;
 
                         while(layer_index < map->tile_layers_above.size() &&
