@@ -82,7 +82,7 @@ namespace TMX {
 
             for(int i = 0; i < layer->height; i++) {
                 for(int j = 0; j < layer->width; j++) {
-                    if(i != 0 or j != 0)
+                    if(i != 0 || j != 0)
                         data >> comma;
 
                     data >> tile_id;
@@ -90,7 +90,7 @@ namespace TMX {
                     if(tileset->tiles[tile_id-1].Property("above") == "true") {
                         int layer_index = 0;
 
-                        while(layer_index < map->tile_layers_above.size() and
+                        while(layer_index < map->tile_layers_above.size() &&
                                 map->tile_layers_above[layer_index]->tiles[i][j] != 0)
                             layer_index++;
 

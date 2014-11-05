@@ -15,7 +15,7 @@ namespace TMXUtils
         std::string fs = filename;
         std::string dir = fs.substr(0, fs.find_last_of("/"));
 
-        if(not dir.empty())
+        if(! dir.empty())
             dir.append("/");
 
         return dir;
