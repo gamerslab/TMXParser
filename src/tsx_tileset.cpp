@@ -67,7 +67,6 @@ namespace TSX {
 
                 tile.animated = tile.properties.find("animated") != tile.properties.end();
                 tile.first_frame = tile.animated && tileset->random ? rand() % tileset->frames : 0;
-                tileset->tiles[tile.id] = tile;
             }
         }
 
